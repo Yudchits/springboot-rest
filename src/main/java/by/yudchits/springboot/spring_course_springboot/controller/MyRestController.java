@@ -1,6 +1,7 @@
 package by.yudchits.springboot.spring_course_springboot.controller;
 
 import by.yudchits.springboot.spring_course_springboot.entity.Employee;
+import by.yudchits.springboot.spring_course_springboot.exception_handler.NoSuchEmployeeException;
 import by.yudchits.springboot.spring_course_springboot.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,12 @@ public class MyRestController {
 
     @GetMapping("/employees/{id}")
     public Employee showEmployeeById(@PathVariable long id){
-        return employeeService.getEmployee(id);
+        Employee employee = employeeService.getEmployee(id);
+
+        if(employee == null)
+            throw new NoSuchEmployeeException("There are no employee with id="+id);
+
+        return employee;
     }
 
     @PostMapping("/employees")
@@ -40,11 +46,11 @@ public class MyRestController {
     @DeleteMapping("/employees/{id}")
     public String deleteEmployee(@PathVariable long id){
         Employee employee = employeeService.getEmployee(id);
-        if(employee != null){
-            employeeService.deleteEmployee(id);
-            return "Employee with id="+id+" was deleted";
-        } else {
-            return "There no employee with id"+id;
-        }
+
+        if(employee == null)
+            throw new NoSuchEmployeeException("There are no employee with id="+id);
+
+        employeeService.deleteEmployee(id);
+        return "Employee with id="+id+" was deleted";
     }
 }
