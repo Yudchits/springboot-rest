@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class EmployeeExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<IncorrectEmployeeData> employeeDontExist(NoSuchEmployeeException ex){
+    public ResponseEntity<IncorrectEmployeeData> employeeDoesNotExist(NoSuchEmployeeException ex){
         IncorrectEmployeeData data = new IncorrectEmployeeData();
         data.setInfo(ex.getMessage());
 
