@@ -2,8 +2,7 @@ package by.yudchits.springboot.spring_course_springboot.dao;
 
 import by.yudchits.springboot.spring_course_springboot.entity.Employee;
 import jakarta.persistence.EntityManager;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,29 +15,25 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 
     @Override
     public void saveOrUpdateEmployee(Employee employee) {
-        Session session = entityManager.unwrap(Session.class);
-        session.saveOrUpdate(employee);
+        Employee savedOrUpdateEmp = entityManager.merge(employee);
+        //чтобы адекватно отображался id в postman/browser
+        employee.setId(savedOrUpdateEmp.getId());
     }
 
     @Override
     public List<Employee> getAllEmployees() {
-        Session session = entityManager.unwrap(Session.class);
-
-        return session.createQuery("from Employee").getResultList();
+        Query query = entityManager.createQuery("from Employee ");
+        return query.getResultList();
     }
 
     @Override
     public Employee getEmployee(long id) {
-        Session session = entityManager.unwrap(Session.class);
-
-        return session.get(Employee.class, id);
+        return entityManager.find(Employee.class, id);
     }
 
     @Override
     public void deleteEmployee(long id) {
-        Session session = entityManager.unwrap(Session.class);
-
-        Query<Employee> query = session.createQuery("delete from Employee where id =: empId");
+        Query query = entityManager.createQuery("delete from Employee where id =: empId");
         query.setParameter("empId", id);
         query.executeUpdate();
     }
