@@ -16,7 +16,7 @@ public class EmployeeExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<IncorrectEmployeeData> otherException(NoSuchEmployeeException ex){
+    public ResponseEntity<IncorrectEmployeeData> otherException(Exception ex){
         IncorrectEmployeeData data = new IncorrectEmployeeData();
         data.setInfo(ex.getMessage());
 
